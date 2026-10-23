@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeCraft - ATS Resume Builder</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style System -->
+    <link rel="stylesheet" href="{% static 'resumes/css/style.css' %}">
+</head>
+<body style="background-color: var(--bg-main);">
+    <!-- Header/Navigation -->
+    <header style="background-color: transparent; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+        <div class="logo-area" style="margin-bottom: 0;">
+            <div class="logo-icon">R</div>
+            <h1 class="logo-text" style="background: linear-gradient(to right, var(--primary), #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ResumeCraft</h1>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <a href="{% url 'login' %}" class="btn btn-secondary">Log In</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Free</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+        <section class="landing-hero">
+            <span class="hero-badge"><i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 0.25rem;"></i> ATS-Friendly Resume Maker</span>
+            <h1 class="hero-title">Build a Resume that gets you <span>interviewed</span>.</h1>
+            <p class="hero-subtitle">Create a professional, ATS-optimized resume using proven templates like Jake's Resume. Customize in real-time and export to PDF.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'register' %}" class="btn btn-primary" style="padding: 0.875rem 2rem; font-size: 1rem; border-radius: var(--radius-md); box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);">
+                    Start Building Now <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section style="margin-bottom: 6rem; text-align: center;">
+            <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem;">Packed with powerful features</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 3rem;">Everything you need to craft a job-winning resume in minutes, tailored for modern developers and recruiters.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                    <h3 class="feature-title">5 Professional Templates</h3>
+                    <p class="feature-desc">Choose from ATS-optimized templates, including the famous Jake's Resume template, tailored for software engineering.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-eye"></i></div>
+                    <h3 class="feature-title">Live Preview Editor</h3>
+                    <p class="feature-desc">See your changes instantly side-by-side in real-time as you fill out details, experience, projects, and skills.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <h3 class="feature-title">ATS Keyword Scanner</h3>
+                    <p class="feature-desc">Compare your resume against any target job description. Identify missing keywords and get an instant match score.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-download"></i></div>
+                    <h3 class="feature-title">High-Quality Export</h3>
+                    <p class="feature-desc">Download as clean PDF using automated server-side rendering or pixel-perfect browser printing.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border); padding: 3rem 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+        <p>&copy; 2026 ResumeCraft. Designed for modern engineers and builders.</p>
+    </footer>
+</body>
+</html>

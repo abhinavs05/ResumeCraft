@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ personal_info.first_name }} {{ personal_info.last_name }} - Modern Resume</title>
+    <style>
+        @page {
+            size: a4;
+            margin: 0;
+        }
+        body {
+            font-family: "Liberation Sans", "Helvetica Neue", "Arial", sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.35;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .main-table {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-collapse: collapse;
+        }
+        .left-col {
+            width: 32%;
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 30px 20px;
+            vertical-align: top;
+        }
+        .right-col {
+            width: 68%;
+            background-color: #ffffff;
+            color: #1e293b;
+            padding: 30px 25px;
+            vertical-align: top;
+        }
+        .name {
+            font-size: 18pt;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .right-name {
+            font-size: 22pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .title-sub {
+            font-size: 10.5pt;
+            color: #818cf8;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .left-section-title {
+            font-size: 10pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #818cf8;
+            border-bottom: 1.5px solid #334155;
+            padding-bottom: 4px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+        .right-section-title {
+            font-size: 12pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .contact-item {
+            font-size: 8.5pt;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+        .contact-icon {
+            font-weight: bold;
+            color: #818cf8;
+        }
+        .skill-badge-list {
+            margin-bottom: 15px;
+        }
+        .skill-cat-title {
+            font-weight: bold;
+            font-size: 9pt;
+            color: #e2e8f0;
+            margin-bottom: 3px;
+        }
+        .skill-details {
+            font-size: 8.5pt;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        .edu-item {
+            margin-bottom: 15px;
+        }
+        .edu-school {
+            font-weight: 700;
+            font-size: 9pt;
+            color: #ffffff;
+        }
+        .edu-degree {
+            font-size: 8.5pt;
+            color: #cbd5e1;
+            font-style: italic;
+        }
+        .edu-date {
+            font-size: 8pt;
+            color: #94a3b8;
+        }
+        /* Right Side Elements */
+        .summary-text {
+            font-size: 9.5pt;
+            text-align: justify;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .job-item {
+            margin-bottom: 18px;
+        }
+        .job-header-table {
+            width: 100%;
+            border: 0;
+            margin-bottom: 4px;
+        }
+        .job-header-table td {
+            padding: 0;
+        }
+        .job-title {
+            font-weight: 700;
+            font-size: 10pt;
+            color: #0f172a;
+        }
+        .job-company {
+            font-weight: 600;
+            color: #4f46e5;
+            font-size: 9.5pt;
+        }
+        .job-date {
+            text-align: right;
+            font-weight: bold;
+            font-size: 9pt;
+            color: #64748b;
+        }
+        .job-location {
+            text-align: right;
+            font-style: italic;
+            font-size: 8.5pt;
+            color: #94a3b8;
+        }
+        ul.bullet-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+        ul.bullet-list li {
+            margin-bottom: 3px;
+            font-size: 9pt;
+            color: #334155;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <table class="main-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <!-- Left Sidebar -->
+            <td class="left-col">
+                <div class="name">{{ personal_info.first_name }}<br>{{ personal_info.last_name }}</div>
+                <div class="title-sub">Software Engineer</div>
+                
+                <div class="left-section-title">Contact</div>
+                
+                {% if personal_info.email %}
+                <div class="contact-item">
+                    <span class="contact-icon">Email:</span><br>
+                    <a href="mailto:{{ personal_info.email }}" style="color: #cbd5e1;">{{ personal_info.email }}</a>
+                </div>
+                {% endif %}
+                
+                {% if personal_info.phone %}
+                <div class="contact-item">
+                    <span class="contact-icon">Phone:</span><br>
+                    {{ personal_info.phone }}
+                </div>
+                {% endif %}
+                
+                {% if personal_info.location %}
+                <div class="contact-item">
+                    <span class="contact-icon">Location:</span><br>
+                    {{ personal_info.location }}
+                </div>
+                {% endif %}
+                
+                {% if personal_info.linkedin %}
+                <div class="contact-item">
+                    <span class="contact-icon">LinkedIn:</span><br>
+                    <a href="{{ personal_info.linkedin }}" target="_blank" style="color: #cbd5e1;">linkedin.com</a>
+                </div>
+                {% endif %}
+                
+                {% if personal_info.github %}
+                <div class="contact-item">
+                    <span class="contact-icon">GitHub:</span><br>
+                    <a href="{{ personal_info.github }}" target="_blank" style="color: #cbd5e1;">github.com/dhruv</a>
+                </div>
+                {% endif %}
+
+                {% if skills %}
+                <div class="left-section-title">Skills</div>
+                {% for sk in skills %}
+                <div class="skill-badge-list">
+                    <div class="skill-cat-title">{{ sk.category }}</div>
+                    <div class="skill-details">{{ sk.skills }}</div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% if educations %}
+                <div class="left-section-title">Education</div>
+                {% for edu in educations %}
+                <div class="edu-item">
+                    <div class="edu-school">{{ edu.institution }}</div>
+                    <div class="edu-degree">{{ edu.degree }}{% if edu.major %} in {{ edu.major }}{% endif %}</div>
+                    {% if edu.gpa %}<div class="edu-degree">GPA: {{ edu.gpa }}</div>{% endif %}
+                    <div class="edu-date">{{ edu.start_date }} - {{ edu.end_date }}</div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </td>
+
+            <!-- Right Main Area -->
+            <td class="right-col">
+                {% if personal_info.summary %}
+                <div class="right-section-title" style="margin-top: 0;">Summary</div>
+                <div class="summary-text">
+                    {{ personal_info.summary }}
+                </div>
+                {% endif %}
+
+                <!-- Experience -->
+                {% if experiences %}
+                <div class="right-section-title">Experience</div>
+                {% for exp in experiences %}
+                <div class="job-item">
+                    <table class="job-header-table" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="job-title">{{ exp.position }}</td>
+                            <td class="job-date">{{ exp.start_date }}{% if exp.end_date %} - {{ exp.end_date }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="job-company">{{ exp.company }}</td>
+                            <td class="job-location">{% if exp.location %}{{ exp.location }}{% endif %}</td>
+                        </tr>
+                    </table>
+                    {% if exp.bullets %}
+                    <ul class="bullet-list">
+                        {% for bullet in exp.bullets %}
+                        <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Projects -->
+                {% if projects %}
+                <div class="right-section-title">Projects</div>
+                {% for proj in projects %}
+                <div class="job-item">
+                    <table class="job-header-table" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="job-title">{{ proj.title }} {% if proj.technologies %}<span style="font-size: 8pt; font-weight: normal; color:#64748b;">({{ proj.technologies }})</span>{% endif %}</td>
+                            <td class="job-date">{% if proj.start_date %}{{ proj.start_date }}{% endif %}</td>
+                        </tr>
+                        {% if proj.link %}
+                        <tr>
+                            <td colspan="2" style="font-size: 8.5pt;"><a href="{{ proj.link }}">{{ proj.link }}</a></td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                    {% if proj.bullets %}
+                    <ul class="bullet-list">
+                        {% for bullet in proj.bullets %}
+                        <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Achievements -->
+                {% if achievements %}
+                <div class="right-section-title">Achievements</div>
+                {% for ach in achievements %}
+                <div class="job-item">
+                    <table class="job-header-table" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="job-title" style="font-size: 9.5pt;">{{ ach.title }}</td>
+                            <td class="job-date">{% if ach.date %}{{ ach.date }}{% endif %}</td>
+                        </tr>
+                    </table>
+                    {% if ach.bullets %}
+                    <ul class="bullet-list">
+                        {% for bullet in ach.bullets %}
+                        <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,459 @@
+{% extends 'resumes/base.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit Resume{% else %}Create Resume{% endif %} - ResumeCraft{% endblock %}
+
+{% block page_title %}
+    {% if is_edit %}Edit Resume: {{ resume.title }}{% else %}New Resume{% endif %}
+{% endblock %}
+
+{% block top_actions %}
+<a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+{% endblock %}
+
+{% block content %}
+<div class="builder-layout">
+    <!-- Left Pane: Wizard Form -->
+    <div class="builder-form-pane">
+        <!-- Form Navigation Tabs -->
+        <div class="form-steps-nav">
+            <button class="step-tab-btn active" data-step="general">General</button>
+            <button class="step-tab-btn" data-step="personal">Personal Info</button>
+            <button class="step-tab-btn" data-step="education">Education</button>
+            <button class="step-tab-btn" data-step="experience">Experience</button>
+            <button class="step-tab-btn" data-step="projects">Projects</button>
+            <button class="step-tab-btn" data-step="skills">Skills</button>
+            <button class="step-tab-btn" data-step="achievements">Achievements</button>
+            <button class="step-tab-btn" data-step="ats">ATS Scanner</button>
+        </div>
+
+        <form id="resume-builder-form" method="post" action="{% url 'resume_save' resume.id %}" data-preview-url="{% url 'resume_preview_ajax' resume.id %}">
+            {% csrf_token %}
+            
+            <!-- Step 1: General Info -->
+            <div class="form-step-content active" id="step-general">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Resume Settings</h3>
+                <div class="form-group">
+                    <label class="form-label" for="resume_title">Resume Name</label>
+                    <input type="text" name="resume_title" id="resume_title" class="form-input" value="{{ resume.title }}" required>
+                    <span class="form-help">Only used to identify your resume in the dashboard.</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="template-selector">Select Resume Design / Template</label>
+                    <select name="template_name" id="template-selector" class="form-input" style="cursor: pointer;">
+                        <option value="jakes" {% if resume.template_name == 'jakes' %}selected{% endif %}>Jake's Resume (Clean Serif, Horizontal Diviers, Compact)</option>
+                        <option value="modern" {% if resume.template_name == 'modern' %}selected{% endif %}>Modern Minimalist (Clean Sans-Serif, Two Column)</option>
+                        <option value="creative" {% if resume.template_name == 'creative' %}selected{% endif %}>Creative Professional (Sidebar, Dark Banner Accent)</option>
+                        <option value="corporate" {% if resume.template_name == 'corporate' %}selected{% endif %}>Structured Corporate (Top header bar, Professional font)</option>
+                        <option value="academic" {% if resume.template_name == 'academic' %}selected{% endif %}>Minimal Academic (Georgia, Classic styling)</option>
+                    </select>
+                </div>
+
+                
+            </div>
+
+            <!-- Step 2: Personal Info -->
+            <div class="form-step-content" id="step-personal">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Contact & Profile Information</h3>
+                <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label class="form-label" for="first_name">First Name</label>
+                        <input type="text" name="first_name" id="first_name" class="form-input" placeholder="e.g. Abhinav" value="{{ personal_info.first_name }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="last_name">Last Name</label>
+                        <input type="text" name="last_name" id="last_name" class="form-input" placeholder="e.g. Saklani" value="{{ personal_info.last_name }}">
+                    </div>
+                </div>
+
+                <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-input" placeholder="e.g. abhinav@example.com" value="{{ personal_info.email }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="text" name="phone" id="phone" class="form-input" placeholder="e.g. 9971084004" value="{{ personal_info.phone }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="location">Location</label>
+                    <input type="text" name="location" id="location" class="form-input" placeholder="e.g. New Delhi, India" value="{{ personal_info.location }}">
+                </div>
+
+                <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label class="form-label" for="github">GitHub Profile (URL)</label>
+                        <input type="url" name="github" id="github" class="form-input" placeholder="https://github.com/..." value="{{ personal_info.github }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="linkedin">LinkedIn Profile (URL)</label>
+                        <input type="url" name="linkedin" id="linkedin" class="form-input" placeholder="https://linkedin.com/in/..." value="{{ personal_info.linkedin }}">
+                    </div>
+                </div>
+
+                <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label class="form-label" for="website">Personal Website / Blog (URL)</label>
+                        <input type="url" name="website" id="website" class="form-input" placeholder="https://..." value="{{ personal_info.website }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="portfolio">Portfolio (URL)</label>
+                        <input type="url" name="portfolio" id="portfolio" class="form-input" placeholder="https://portfolio.com" value="{{ personal_info.portfolio }}">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="summary">Summary / Profile Statement</label>
+                    <textarea name="summary" id="summary" class="form-input" rows="4" placeholder="Third-year Computer Science student with strong foundations in backend development...">{{ personal_info.summary }}</textarea>
+                </div>
+            </div>
+
+            <!-- Step 3: Education -->
+            <div class="form-step-content" id="step-education">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Education History</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicRow('education')">
+                        <i class="fa-solid fa-plus"></i> Add Education
+                    </button>
+                </div>
+                <div id="education-container">
+                    {% for edu in educations %}
+                    <div class="dynamic-row-card">
+                        <button type="button" class="remove-row-btn"><i class="fa-solid fa-trash"></i> Remove</button>
+                        <div class="form-group">
+                            <label class="form-label">Institution / School</label>
+                            <input type="text" name="institution[]" class="form-input" placeholder="e.g. Guru Gobind Singh Indraprastha University" value="{{ edu.institution }}">
+                        </div>
+                        <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label class="form-label">Degree</label>
+                                <input type="text" name="degree[]" class="form-input" placeholder="e.g. B.Tech" value="{{ edu.degree }}">
+                            </div>
+                            <div>
+                                <label class="form-label">Major / Field of Study</label>
+                                <input type="text" name="major[]" class="form-input" placeholder="e.g. Information Technology" value="{{ edu.major }}">
+                            </div>
+                        </div>
+                        <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label class="form-label">GPA</label>
+                                <input type="text" name="gpa[]" class="form-input" placeholder="e.g. 8.5/10" value="{{ edu.gpa }}">
+                            </div>
+                            <div>
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location[]" class="form-input" placeholder="e.g. New Delhi" value="{{ edu.location }}">
+                            </div>
+                        </div>
+                        <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label class="form-label">Start Date</label>
+                                <input type="text" name="start_date[]" class="form-input" placeholder="e.g. Aug 2023" value="{{ edu.start_date }}">
+                            </div>
+                            <div>
+                                <label class="form-label">End Date</label>
+                                <input type="text" name="end_date[]" class="form-input" placeholder="e.g. May 2027" value="{{ edu.end_date }}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Description (Optional)</label>
+                            <textarea name="description[]" class="form-input" rows="2" placeholder="Relevant coursework, achievements, etc.">{{ edu.description }}</textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 4: Experience -->
+            <div class="form-step-content" id="step-experience">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Work Experience</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicRow('experience')">
+                        <i class="fa-solid fa-plus"></i> Add Experience
+                    </button>
+                </div>
+                <div id="experience-container">
+                    {% for exp in experiences %}
+                    <div class="dynamic-row-card">
+                        <button type="button" class="remove-row-btn"><i class="fa-solid fa-trash"></i> Remove</button>
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" name="company[]" class="form-input" placeholder="e.g. Google" value="{{ exp.company }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Position / Title</label>
+                            <input type="text" name="position[]" class="form-input" placeholder="e.g. Software Engineer Intern" value="{{ exp.position }}">
+                        </div>
+                        <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label class="form-label">Location</label>
+                                <input type="text" name="exp_location[]" class="form-input" placeholder="e.g. Mountain View, CA" value="{{ exp.location }}">
+                            </div>
+                            <div>
+                                <label class="form-label">Dates (Start - End)</label>
+                                <input type="text" name="exp_dates[]" class="form-input" placeholder="e.g. Jun 2025 - Aug 2025" value="{{ exp.start_date }}{% if exp.end_date %} - {{ exp.end_date }}{% endif %}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Description (Bullet points, one per line)</label>
+                            <textarea name="exp_description[]" class="form-input" rows="4" placeholder="- Developed X using Y...&#10;- Improved performance by Z%...">{{ exp.description }}</textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 5: Projects -->
+            <div class="form-step-content" id="step-projects">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Projects</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicRow('project')">
+                        <i class="fa-solid fa-plus"></i> Add Project
+                    </button>
+                </div>
+                <div id="project-container">
+                    {% for proj in projects %}
+                    <div class="dynamic-row-card">
+                        <button type="button" class="remove-row-btn"><i class="fa-solid fa-trash"></i> Remove</button>
+                        <div class="form-group">
+                            <label class="form-label">Project Title</label>
+                            <input type="text" name="proj_title[]" class="form-input" placeholder="e.g. Resume Builder" value="{{ proj.title }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Technologies Used</label>
+                            <input type="text" name="proj_technologies[]" class="form-input" placeholder="e.g. Django, LaTeX, HTML/CSS" value="{{ proj.technologies }}">
+                        </div>
+                        <div class="form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label class="form-label">Project Link (Optional)</label>
+                                <input type="url" name="proj_link[]" class="form-input" placeholder="https://github.com/..." value="{{ proj.link }}">
+                            </div>
+                            <div>
+                                <label class="form-label">Dates (Optional)</label>
+                                <input type="text" name="proj_dates[]" class="form-input" placeholder="e.g. Jan 2026" value="{{ proj.start_date }}{% if proj.end_date %} - {{ proj.end_date }}{% endif %}">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Description (Bullet points, one per line)</label>
+                            <textarea name="proj_description[]" class="form-input" rows="3" placeholder="- Built a full-stack Django app...&#10;- Generated ATS resumes using LaTeX...">{{ proj.description }}</textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 6: Skills -->
+            <div class="form-step-content" id="step-skills">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Skills & Toolkits</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicRow('skill')">
+                        <i class="fa-solid fa-plus"></i> Add Skill Category
+                    </button>
+                </div>
+                <div id="skill-container">
+                    {% for sk in skills %}
+                    <div class="dynamic-row-card">
+                        <button type="button" class="remove-row-btn"><i class="fa-solid fa-trash"></i> Remove</button>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
+                                <div>
+                                    <label class="form-label">Category</label>
+                                    <input type="text" name="skill_category[]" class="form-input" placeholder="e.g. Languages" value="{{ sk.category }}">
+                                </div>
+                                <div>
+                                    <label class="form-label">Skills (Comma separated)</label>
+                                    <input type="text" name="skills[]" class="form-input" placeholder="e.g. C++, Python, Java" value="{{ sk.skills }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 7: Achievements -->
+            <div class="form-step-content" id="step-achievements">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem;">Achievements & Extra-Curriculars</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicRow('achievement')">
+                        <i class="fa-solid fa-plus"></i> Add Achievement
+                    </button>
+                </div>
+                <div id="achievement-container">
+                    {% for ach in achievements %}
+                    <div class="dynamic-row-card">
+                        <button type="button" class="remove-row-btn"><i class="fa-solid fa-trash"></i> Remove</button>
+                        <div class="form-group">
+                            <label class="form-label">Achievement Title</label>
+                            <input type="text" name="ach_title[]" class="form-input" placeholder="e.g. Solved 400+ coding challenges" value="{{ ach.title }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date (Optional)</label>
+                            <input type="text" name="ach_date[]" class="form-input" placeholder="e.g. 2026" value="{{ ach.date }}">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Description (Optional)</label>
+                            <textarea name="ach_description[]" class="form-input" rows="2" placeholder="Brief context...">{{ ach.description }}</textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 8: ATS Scanner & JSON Export -->
+            <div class="form-step-content" id="step-ats">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem;">ATS Keyword Optimizer</h3>
+                <div class="form-group">
+                    <label class="form-label" for="job-description">Job Description / Requirements</label>
+                    <textarea id="job-description" class="form-input" rows="6" placeholder="Paste the job description you are applying for here..."></textarea>
+                </div>
+                
+                <button type="button" class="btn btn-primary" onclick="runAtsScan()" style="width: 100%;">
+                    <i class="fa-solid fa-qrcode" style="margin-right: 0.25rem;"></i> Analyze ATS Match Rate
+                </button>
+
+                <div id="ats-results-area" style="display: none; margin-top: 1.5rem;">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <h4 style="font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem;">Backup & Portability</h4>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{% url 'resume_export_json' resume.id %}" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-file-export" style="margin-right: 0.25rem;"></i> Export JSON
+                        </a>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('import-json-file').click()">
+                            <i class="fa-solid fa-file-import" style="margin-right: 0.25rem;"></i> Import JSON
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Save Footer in form pane -->
+            <div style="position: sticky; bottom: 0; background-color: var(--bg-card); padding: 1.5rem 0; border-top: 1px solid var(--border); margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Progress
+                </button>
+            </div>
+        </form>
+        
+        <!-- Hidden file input for JSON import -->
+        <form id="import-json-form" action="{% url 'resume_import_json' resume.id %}" method="post" enctype="multipart/form-data" style="display: none;">
+            {% csrf_token %}
+            <input type="file" id="import-json-file" name="json_file" accept=".json" onchange="document.getElementById('import-json-form').submit()">
+        </form>
+    </div>
+
+    <!-- Right Pane: Real-Time Preview -->
+    <div class="builder-preview-pane">
+        <div class="preview-controls">
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary btn-sm" id="zoom-out" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <button type="button" class="btn btn-secondary btn-sm" id="zoom-in" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()" title="Use Browser Print engine for perfect layouts">
+                    <i class="fa-solid fa-print"></i> Print (Browser PDF)
+                </button>
+                <a href="{% url 'resume_pdf' resume.id %}" target="_blank" class="btn btn-primary btn-sm" title="Download backend generated PDF">
+                    <i class="fa-solid fa-download"></i> Backend PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Zoomable Container -->
+        <div class="preview-wrapper-scrollable">
+            <div class="resume-preview-container">
+                <div id="preview-content-area">
+                    <!-- Dynamic Preview HTML injected here via builder.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'resumes/js/builder.js' %}"></script>
+<script>
+    // Load pre-configured sample data
+    function loadSampleData() {
+        if (confirm("This will overwrite your current form data. Are you sure you want to load the sample data?")) {
+            fetch("{% url 'load_sample_data' resume.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+            .then(res => {
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Error loading sample data.");
+                }
+            });
+        }
+    }
+
+    // Run simple ATS Keyword Overlap Scanner
+    function runAtsScan() {
+        const jdText = document.getElementById('job-description').value;
+        const resultsArea = document.getElementById('ats-results-area');
+        
+        if (!jdText.trim()) {
+            alert("Please paste a job description first.");
+            return;
+        }
+
+        resultsArea.style.display = "block";
+        resultsArea.innerHTML = `<p style="font-size:0.875rem; text-align:center;"><i class="fa-solid fa-spinner fa-spin"></i> Scanning resume details against job description...</p>`;
+
+        const formData = new FormData(document.getElementById('resume-builder-form'));
+        formData.append('job_description', jdText);
+
+        fetch("{% url 'resume_ats_scan' resume.id %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            let scoreClass = 'low';
+            if (data.score >= 75) scoreClass = 'high';
+            else if (data.score >= 50) scoreClass = 'medium';
+
+            let keywordsListHtml = data.matched_keywords.map(kw => `<span class="template-badge" style="background-color:#d1fae5; color:#065f46; margin:0.25rem;">${kw}</span>`).join('');
+            let missingListHtml = data.missing_keywords.map(kw => `<span class="template-badge" style="background-color:#fee2e2; color:#991b1b; margin:0.25rem;">${kw}</span>`).join('');
+
+            resultsArea.innerHTML = `
+                <div class="ats-container">
+                    <div class="ats-score-circle ${scoreClass}">${data.score}%</div>
+                    <p style="font-weight:700; text-align:center; font-size:1.1rem; margin-bottom:1rem;">ATS Match Score</p>
+                    
+                    <h5 style="font-weight:700; font-size:0.875rem; margin-bottom:0.5rem;">Matched Keywords (${data.matched_keywords.length})</h5>
+                    <div style="display:flex; flex-wrap:wrap; margin-bottom:1rem;">
+                        ${keywordsListHtml || '<em style="font-size:0.825rem; color:var(--text-muted);">No keyword overlap found.</em>'}
+                    </div>
+
+                    <h5 style="font-weight:700; font-size:0.875rem; margin-bottom:0.5rem;">Suggested Keywords to Add (${data.missing_keywords.length})</h5>
+                    <div style="display:flex; flex-wrap:wrap; margin-bottom:1rem;">
+                        ${missingListHtml || '<em style="font-size:0.825rem; color:var(--text-muted);">No missing target keywords. Great job!</em>'}
+                    </div>
+
+                    <div style="background-color:var(--primary-light); color:var(--primary-hover); padding:1rem; border-radius:var(--radius-sm); font-size:0.825rem; margin-top:1.25rem;">
+                        <strong>Optimization Tip:</strong> Incorporate the missing keywords in red naturally inside your Work Experience or Projects bullet points to raise your score!
+                    </div>
+                </div>
+            `;
+        })
+        .catch(err => {
+            resultsArea.innerHTML = `<p style="color:var(--danger); font-size:0.875rem; text-align:center;">Scanning failed. Try saving your resume first.</p>`;
+        });
+    }
+</script>
+{% endblock %}

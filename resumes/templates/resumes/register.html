@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ResumeCraft</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style System -->
+    <link rel="stylesheet" href="{% static 'resumes/css/style.css' %}">
+</head>
+<body class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo-area" style="justify-content: center; margin-bottom: 1rem;">
+                <div class="logo-icon">R</div>
+                <h1 class="logo-text" style="background: linear-gradient(to right, var(--primary), #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ResumeCraft</h1>
+            </div>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Build professional, ATS-friendly resumes</p>
+        </div>
+
+        {% if error_messages %}
+        <div class="btn btn-danger" style="margin-bottom: 1.25rem; font-weight: 500; width: 100%; pointer-events: none; justify-content: flex-start;">
+            <i class="fa-solid fa-circle-exclamation" style="margin-right: 0.5rem;"></i>
+            {{ error_messages }}
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-input" placeholder="Choose a username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" name="email" id="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-input" placeholder="At least 6 characters" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password_confirm" class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirm" id="password_confirm" class="form-input" placeholder="Confirm your password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; margin-top: 1rem;">
+                Sign Up
+            </button>
+        </form>
+
+        <p class="auth-footer-link">
+            Already have an account? <a href="{% url 'login' %}" style="font-weight: 600;">Log In</a>
+        </p>
+    </div>
+</body>
+</html>

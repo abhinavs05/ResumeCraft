@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ResumeCraft - ATS Resume Builder{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style System -->
+    <link rel="stylesheet" href="{% static 'resumes/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">R</div>
+                <h1 class="logo-text">ResumeCraft</h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item {% if request.resolver_match.view_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.view_name == 'resume_quick_create' %}active{% endif %}">
+                    <a href="{% url 'resume_quick_create' %}">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Create Resume</span>
+                    </a>
+                </li>
+                {% if resume and resume.id %}
+                <li class="nav-item {% if request.resolver_match.view_name == 'resume_edit' %}active{% endif %}">
+                    <a href="{% url 'resume_edit' resume.id %}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Editing: {{ resume.title|truncatechars:15 }}</span>
+                    </a>
+                </li>
+                {% endif %}
+            </nav>
+
+            <div class="sidebar-footer">
+                {% if user.is_authenticated %}
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">{{ user.username }}</div>
+                        <div class="user-role">Member</div>
+                    </div>
+                </div>
+                <form action="{% url 'logout' %}" method="post" id="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+                {% else %}
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="{% url 'login' %}" class="btn btn-secondary btn-sm" style="width: 100%;">Log In</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm" style="width: 100%;">Sign Up</a>
+                </div>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Main Content Panel -->
+        <main class="main-content">
+            <!-- Messages / Toast Notifications -->
+            {% if messages %}
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                {% for message in messages %}
+                <div class="btn {% if message.tags == 'error' %}btn-danger{% elif message.tags == 'success' %}btn-success{% else %}btn-secondary{% endif %}" style="justify-content: flex-start; text-align: left; padding: 0.75rem 1.25rem; font-weight: 500; width: 100%; border-radius: var(--radius-sm); pointer-events: none;">
+                    {% if message.tags == 'error' %}
+                    <i class="fa-solid fa-triangle-exclamation" style="margin-right: 0.5rem;"></i>
+                    {% elif message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check" style="margin-right: 0.5rem;"></i>
+                    {% else %}
+                    <i class="fa-solid fa-info" style="margin-right: 0.5rem;"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Page Header -->
+            <header class="top-bar">
+                <h2 class="page-title">{% block page_title %}{% endblock %}</h2>
+                <div class="top-bar-actions">
+                    {% block top_actions %}{% endblock %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <section class="content-body" style="flex-grow: 1; display: flex; flex-direction: column;">
+                {% block content %}{% endblock %}
+            </section>
+        </main>
+    </div>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

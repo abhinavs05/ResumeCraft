@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ personal_info.first_name }} {{ personal_info.last_name }} - Resume</title>
+    <style>
+        @page {
+            size: a4;
+            margin: 0.5in 0.5in 0.5in 0.5in;
+        }
+        body {
+            font-family: "Liberation Serif", "Times New Roman", "Georgia", serif;
+            font-size: 10pt;
+            line-height: 1.25;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .name {
+            font-size: 20pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .contact-info {
+            font-size: 9.5pt;
+            margin-bottom: 10px;
+        }
+        .contact-info a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .section-header {
+            font-size: 11pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000000;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            padding-bottom: 1px;
+        }
+        .item-table {
+            width: 100%;
+            border: 0;
+            margin-bottom: 3px;
+        }
+        .item-table td {
+            padding: 0;
+            vertical-align: top;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        .item-right {
+            text-align: right;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        .item-subtitle {
+            font-style: italic;
+            font-size: 9.5pt;
+        }
+        .item-subright {
+            text-align: right;
+            font-style: italic;
+            font-size: 9.5pt;
+        }
+        ul.bullet-list {
+            margin: 0 0 4px 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        ul.bullet-list li {
+            margin-bottom: 2px;
+            font-size: 9.5pt;
+            text-align: justify;
+        }
+        .skills-table {
+            width: 100%;
+            border: 0;
+            margin-top: 2px;
+        }
+        .skills-table td {
+            padding: 1px 0;
+            vertical-align: top;
+            font-size: 9.5pt;
+        }
+        .skills-category {
+            font-weight: bold;
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="text-center">
+        <div class="name">{{ personal_info.first_name }} {{ personal_info.last_name }}</div>
+        <div class="contact-info">
+            {% if personal_info.location %}{{ personal_info.location }}{% endif %}
+            {% if personal_info.phone %} &nbsp;|&nbsp; {{ personal_info.phone }}{% endif %}
+            {% if personal_info.email %} &nbsp;|&nbsp; <a href="mailto:{{ personal_info.email }}">{{ personal_info.email }}</a>{% endif %}
+            {% if personal_info.linkedin %} &nbsp;|&nbsp; <a href="{{ personal_info.linkedin }}">LinkedIn</a>{% endif %}
+            {% if personal_info.github %} &nbsp;|&nbsp; <a href="{{ personal_info.github }}">GitHub</a>{% endif %}
+            {% if personal_info.website %} &nbsp;|&nbsp; <a href="{{ personal_info.website }}">Portfolio</a>{% endif %}
+        </div>
+    </div>
+
+    <!-- Summary (if populated) -->
+    {% if personal_info.summary %}
+    <div class="section-header">Profile / Summary</div>
+    <div style="font-size: 9.5pt; margin-bottom: 8px; text-align: justify;">
+        {{ personal_info.summary }}
+    </div>
+    {% endif %}
+
+    <!-- Education -->
+    {% if educations %}
+    <div class="section-header">Education</div>
+    {% for edu in educations %}
+    <table class="item-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="item-title" align="left">{{ edu.institution }}</td>
+            <td class="item-right" align="right">{{ edu.start_date }}{% if edu.end_date %} -- {{ edu.end_date }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="item-subtitle" align="left">
+                {{ edu.degree }}{% if edu.major %} in {{ edu.major }}{% endif %}{% if edu.gpa %} (CGPA: {{ edu.gpa }}){% endif %}
+            </td>
+            <td class="item-subright" align="right">{% if edu.location %}{{ edu.location }}{% endif %}</td>
+        </tr>
+    </table>
+    {% if edu.bullets %}
+    <ul class="bullet-list">
+        {% for bullet in edu.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <!-- Experience -->
+    {% if experiences %}
+    <div class="section-header">Experience</div>
+    {% for exp in experiences %}
+    <table class="item-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="item-title" align="left">{{ exp.company }}</td>
+            <td class="item-right" align="right">{{ exp.start_date }}</td>
+        </tr>
+        <tr>
+            <td class="item-subtitle" align="left">{{ exp.position }}</td>
+            <td class="item-subright" align="right">{% if exp.location %}{{ exp.location }}{% endif %}</td>
+        </tr>
+    </table>
+    {% if exp.bullets %}
+    <ul class="bullet-list">
+        {% for bullet in exp.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <!-- Projects -->
+    {% if projects %}
+    <div class="section-header">Projects</div>
+    {% for proj in projects %}
+    <table class="item-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="item-title" align="left">
+                {{ proj.title }} {% if proj.technologies %}| <i>{{ proj.technologies }}</i>{% endif %}
+                {% if proj.link %}(<a href="{{ proj.link }}">link</a>){% endif %}
+            </td>
+            <td class="item-right" align="right">{% if proj.start_date %}{{ proj.start_date }}{% endif %}</td>
+        </tr>
+    </table>
+    {% if proj.bullets %}
+    <ul class="bullet-list">
+        {% for bullet in proj.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <!-- Skills -->
+    {% if skills %}
+    <div class="section-header">Technical Skills</div>
+    <table class="skills-table" cellspacing="0" cellpadding="0">
+        {% for sk in skills %}
+        <tr>
+            <td class="skills-category" align="left">{{ sk.category }}:</td>
+            <td align="left">{{ sk.skills }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <!-- Achievements -->
+    {% if achievements %}
+    <div class="section-header">Achievements & Extracurriculars</div>
+    {% for ach in achievements %}
+    <table class="item-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="item-title" align="left">{{ ach.title }}</td>
+            <td class="item-right" align="right">{% if ach.date %}{{ ach.date }}{% endif %}</td>
+        </tr>
+    </table>
+    {% if ach.bullets %}
+    <ul class="bullet-list">
+        {% for bullet in ach.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+</body>
+</html>
