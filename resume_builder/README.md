@@ -67,7 +67,3 @@ To create a Django administrator account for `/admin/`, run:
 ```bash
 python manage.py createsuperuser
 ```
-
-## Security note
-
-The current development settings contain a hard-coded Django secret key and have `DEBUG` enabled. Before deploying or publishing a production configuration, move the secret key to an environment variable, set `DEBUG` to `False`, and configure `ALLOWED_HOSTS` for your deployment. Never use the development settings as-is on a public production server.
